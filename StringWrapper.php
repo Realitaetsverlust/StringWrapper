@@ -13,16 +13,8 @@ class StringWrapper {
         $this->length = strlen($string);
     }
 
-    /**
-     * Wrapper for str_getcsv()
-     *
-     * @param string $delimiter
-     * @param string $enclosure
-     * @param string $escape
-     * @return array
-     */
-    public function getCsv($delimiter = ',', $enclosure = '"', $escape = '\\') : array {
-        return str_getcsv($delimiter, $enclosure, $escape);
+    public function __toString() : string {
+        return $this->string;
     }
 
     /**
@@ -33,14 +25,16 @@ class StringWrapper {
      * @param string $search
      * @param string $replace
      * @param bool $caseSensitive
-     * @return string
+     * @return StringWrapper
      */
-    public function replace(string $search, string $replace, bool $caseSensitive = true) : string {
+    public function replace(string $search, string $replace, bool $caseSensitive = true) : StringWrapper {
         if($caseSensitive) {
-            return str_replace($search, $replace, $this->string);
+            $this->string = str_replace($search, $replace, $this->string);
         } else {
-            return str_ireplace($search, $replace, $this->string);
+            $this->string = str_ireplace($search, $replace, $this->string);
         }
+
+        return $this;
     }
 
     /**
@@ -49,38 +43,42 @@ class StringWrapper {
      * @param int $padLength
      * @param string $padding
      * @param int $paddingType
-     * @return string
+     * @return StringWrapper
      */
-    public function pad(int $padLength, string $padding = ' ', int $paddingType = STR_PAD_RIGHT ) {
-        return str_pad($padLength, $padding, $paddingType);
+    public function pad(int $padLength, string $padding = ' ', int $paddingType = STR_PAD_RIGHT) : StringWrapper {
+        $this->string = str_pad($this->string, $padLength, $padding, $paddingType);
+        return $this;
     }
 
     /**
      * Wrapper for str_repeat()
      *
      * @param int $multiplier
-     * @return string
+     * @return StringWrapper
      */
-    public function repeat(int $multiplier) : string {
-        return str_repeat($this->string, $multiplier);
+    public function repeat(int $multiplier) : StringWrapper {
+        $this->string = str_repeat($this->string, $multiplier);
+        return $this;
     }
 
     /**
      * Wrapper for str_rot13()
      *
-     * @return string
+     * @return StringWrapper
      */
-    public function rot13() : string {
-        return str_rot13($this->string);
+    public function rot13() : StringWrapper {
+        $this->string = str_rot13($this->string);
+        return $this;
     }
 
     /**
      * Wrapper for str_shuffle()
      *
-     * @return string
+     * @return StringWrapper
      */
-    public function shuffle() : string {
-        return str_shuffle($this->string);
+    public function shuffle() : StringWrapper {
+        $this->string = str_shuffle($this->string);
+        return $this;
     }
 
     /**
@@ -89,7 +87,7 @@ class StringWrapper {
      * @param int $elementSize
      * @return array
      */
-    public function split($elementSize = 1) {
+    public function split($elementSize = 1) : array {
         return str_split($this->string, $elementSize);
     }
 
@@ -128,14 +126,46 @@ class StringWrapper {
     }
 
     /**
+     * Wrapper for str_starts_with()
+     *
+     * @param string $string
+     * @return string
+     */
+    public function startWith(string $string) : bool {
+        return str_starts_with($this->string, $string);
+    }
+
+    /**
+     * Wrapper for trim()
+     *
+     * @param string $characters
+     * @return $this
+     */
+    public function trim(string $characters = " \n\r\t\v\0") : StringWrapper {
+        $this->string = trim($this->string, $characters);
+        return $this;
+    }
+
+    /**
      * Wrapper for strstr() and stristr(). Ridiculous names btw. I'd never recognize what these functions
      * would do without checking the docs ...
-     *StringWrapper
+     * StringWrapper
      * @param string $string
+     * @param bool $caseSensitive
      * @param bool $beforeNeedle
      * @return false|string
      */
     public function firstOccurence(string $string, bool $caseSensitive, bool $beforeNeedle = false) {
         return $caseSensitive ? strstr($this->string, $string, $beforeNeedle) : stristr($this->string, $string, $beforeNeedle);
+    }
+
+    /**
+     * Wrapper for strrchr()
+     *
+     * @param string $string
+     * @return string
+     */
+    public function lastOccurence(string $string) : string {
+        return strrchr($this->string, $string);
     }
 }
