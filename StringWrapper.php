@@ -3,13 +3,9 @@
 namespace Realitaetsverlust\Wrapper;
 
 class StringWrapper {
-    public string $string;
     public int $length;
-    public string $charset;
 
-    public function __construct(string $string, string $charset = 'utf-8') {
-        $this->string = $string;
-        $this->charset = $charset;
+    public function __construct(public string $string, public string $charset = 'utf-8') {
         $this->length = strlen($string);
     }
 
